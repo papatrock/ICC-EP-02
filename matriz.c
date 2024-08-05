@@ -119,6 +119,27 @@ void multMatVet (MatRow mat, Vetor v, int m, int n, Vetor res)
   }
 }
 
+/**
+ *  Funcao multMatVetOtimi:  Efetua multiplicacao entre matriz 'mxn' por vetor
+ *                           de 'n' elementos utilizando tecnicas de otimização
+ *                            
+ *  @param mat matriz 'mxn'
+ *  @param m número de linhas da matriz
+ *  @param n número de colunas da matriz
+ *  @param res vetor que guarda o resultado. Deve estar previamente alocado e com
+ *             seus elementos inicializados em 0.0 (zero)
+ *  @return vetor de 'm' elementos
+ *
+ */
+void multMatVetOtimi (MatRow mat, Vetor v, int m, int n, Vetor res,int unrollFactor)
+{
+  for( int i=0; i<n-n%unrollFactor; i+=unrollFactor)
+    for(int j=0; j<n; ++j)
+    {
+      
+    }
+}
+
 
 /**
  *  Funcao multMatMat: Efetua multiplicacao de duas matrizes 'n x n' 
