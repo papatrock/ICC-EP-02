@@ -134,10 +134,23 @@ void multMatVet (MatRow mat, Vetor v, int m, int n, Vetor res)
 void multMatVetOtimi (MatRow mat, Vetor v, int m, int n, Vetor res,int unrollFactor)
 {
   for( int i=0; i<n-n%unrollFactor; i+=unrollFactor)
+  {
     for(int j=0; j<n; ++j)
     {
+      res[i] = res[i] + mat[i*n+j]*v[j];
+      res[i+1] = res[i+1] + mat[(i+1)*n+j]*v[j];
       
     }
+
+    //residuo
+    for(int i=n-n%unrollFactor; i<n; ++i)
+    {
+      for(int j=0; j<n; ++j)
+      {
+        res[i] = res[i] + mat[i*n+j]*v[j];
+      }
+    }
+  }
 }
 
 
@@ -159,6 +172,34 @@ void multMatMat (MatRow A, MatRow B, int n, MatRow C)
     for (int j=0; j < n; ++j)
       for (int k=0; k < n; ++k)
 	C[i*n+j] += A[i*n+k] * B[k*n+j];
+}
+
+void multMatMatOtimi(MatRow A, MatRow B, int n, MatRow C, int unrollFactor,int blocking)
+{
+  for(int ii = 0; ii < n/blocking; ++ii)
+    {
+        int istart = ii * blocking; int iend = istart+blocking;
+        for(int jj = 0; jj < n/blocking; ++jj)
+        {
+            int jstart = jj * blocking; int jend = jstart + blocking;
+            for(int kk = 0; kk < n/blocking; ++kk)
+            {
+                int kstart = kk * blocking; int kend = kstart + blocking;
+                for (int i = istart; i < iend; ++i)
+                {
+                    for (int j = jstart; j < jend; j += unrollFactor)
+                    {
+                        for (int k = kstart; k < kend; ++k)
+                        {
+                            C[i*n+j] += A[i*n+k] * B[k*n+j];
+                            C[i*n+j+1] += A[i*n+k] * B[k*n+j+1];
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 

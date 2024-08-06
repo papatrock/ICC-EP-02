@@ -9,6 +9,9 @@
 
 #define ABS(num)  ((num) < 0.0 ? -(num) : (num))
 
+#define UF 2
+#define BK 4
+
 /* Tipos para matrizes e vetores */
 
 typedef double real_t;
@@ -29,3 +32,6 @@ void multMatMat(MatRow A, MatRow B, int n, MatRow C);
 void prnMat (MatRow mat, int m, int n);
 void prnVetor (Vetor vet, int n);
 
+void multMatMatOtimi(MatRow A, MatRow B, int n, MatRow C, int unrollFactor,int blocking);
+
+void multMatVetOtimi (MatRow mat, Vetor v, int m, int n, Vetor res,int unrollFactor);

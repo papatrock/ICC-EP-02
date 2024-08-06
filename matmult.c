@@ -63,6 +63,7 @@ int main (int argc, char *argv[])
   }
     
 #ifdef _DEBUG_
+    printf("ORIGINAL\n");
     prnMat (mRow_1, n, n);
     prnMat (mRow_2, n, n);
     prnVetor (vet, n);
@@ -74,9 +75,20 @@ int main (int argc, char *argv[])
   multMatMat (mRow_1, mRow_2, n, resMat);
     
 #ifdef _DEBUG_
+    printf("RESULTADO 1 \n");
     prnVetor (res, n);
     prnMat (resMat, n, n);
 #endif /* _DEBUG_ */
+
+  multMatVetOtimi (mRow_1, vet, n, n, res,UF);
+
+  multMatMatOtimi (mRow_1, mRow_2, n, resMat,UF,BK);
+
+  #ifdef _DEBUG_
+    printf("RESULTADO 2 \n");	
+    prnVetor (res, n);
+    prnMat (resMat, n, n);
+  #endif /* _DEBUG_ */
 
   liberaVetor ((void*) mRow_1);
   liberaVetor ((void*) mRow_2);
