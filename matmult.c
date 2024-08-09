@@ -4,7 +4,7 @@
 #include <getopt.h>    /* getopt */
 #include <time.h>
 
-//#include <likwid.h>
+#include <likwid.h>
 #include "matriz.h"
 
 /**
@@ -82,18 +82,26 @@ int main (int argc, char *argv[])
 #endif /* _DEBUG_ */
 
   double time;
+  LIKWID_MARKER_INIT;
 
+
+  LIKWID_MARKER_START("MulMatVet_");
   time = timestamp();
   multMatVet (mRow_1, vet, n, n, res);
   time = timestamp() - time;
+  LIKWID_MARKER_STOP("MulMatVet_");
   printf("%f,",time);
 
+  LIKWID_MARKER_START("MulMatMat_");
   time = timestamp();  
   multMatMat (mRow_1, mRow_2, n, resMat);
   time = timestamp() - time;
+  LIKWID_MARKER_STOP("MulMatMat_");
   printf("%f\n",time);
 
     
+  LIKWID_MARKER_CLOSE;
+
 #ifdef _DEBUG_
     printf("RESULTADO 1 \n");
     prnVetor (res, n);

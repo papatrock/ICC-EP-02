@@ -5,8 +5,8 @@
 # Compilador
            CC = gcc -Wall
 
-       CFLAGS =  -O3 -mavx2 -march=native
-       LFLAGS = -lm
+       CFLAGS =  -O3 -mavx2 -march=native -DLIKWID_PERFMON -I${LIKWID_INCLUDE}
+       LFLAGS = -lm -L${LIKWID_LIB} -llikwid
 
 # Lista de arquivos para distribuição
 DISTFILES = *.c *.h README.md Makefile perfctr
