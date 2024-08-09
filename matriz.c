@@ -78,7 +78,7 @@ Vetor geraVetor (int n, int zerar)
       memset(vetor,0,n*sizeof(real_t));
     else
       for (int i=0; i < n; ++i)
-	vetor[i] = generateRandomB();
+	      vetor[i] = generateRandomB();
   }
   
   return (vetor);
