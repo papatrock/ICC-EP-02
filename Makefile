@@ -1,6 +1,6 @@
 # PROGRAMA
         PROG = matmult
-        OBJS = $(PROG).o matriz.o
+        OBJS = $(PROG).o matriz.o utils.o
 
 # Compilador
            CC = gcc -Wall
@@ -33,6 +33,10 @@ purge:   clean
 	@echo "Faxina ...."
 	@rm -f  $(PROG) *.o a.out $(DISTDIR) $(DISTDIR).tar
 	@rm -f *.png marker.out
+	@rm Resultados/*.csv
+	@rm Resultados/*.dat
+	@rm Dados/*.tmp
+	@rm Graficos/*.png
 
 dist: purge
 	@echo "Gerando arquivo de distribuição ($(DISTDIR).tar) ..."

@@ -42,19 +42,20 @@ static inline real_t generateRandomB( )
  *
  */
 
-MatRow geraMatRow (int m, int n, int zerar)
+MatRow geraMatRow(int m, int n, int zerar)
 {
-  MatRow matriz = (real_t *) malloc(m*n*sizeof(real_t));
+  MatRow matriz = (real_t *)malloc(m * n * sizeof(real_t));
 
-  if (matriz) {
+  if (matriz)
+  {
     if (zerar)
-      memset(matriz,0,m*n*sizeof(real_t));
+      memset(matriz, 0, m * n * sizeof(real_t));
     else
-      for (int i=0; i < m; ++i)
-	for (int j=0; j < n; ++j)
-	  matriz[i*n + j] = generateRandomA(i, j);
+      for (int i = 0; i < m; ++i)
+        for (int j = 0; j < n; ++j)
+          matriz[i * n + j] = generateRandomA(i, j);
   }
-  
+
   return (matriz);
 }
 

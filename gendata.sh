@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PROG="matmult"
-METRICA="FLOPS_DP L2CACHE L3"
+METRICA="FLOPS_AVX L2CACHE L3 ENERGY "
 CPU=3
 DATA_DIR="Dados/"
 TEMPOS="Resultados/Tempos.csv"
@@ -9,9 +9,10 @@ mkdir -p ${DATA_DIR}
 
 echo "performance" > /sys/devices/system/cpu/cpufreq/policy3/scaling_governor
 
-make purge matmult
+make purge
+make
 
-TAMANHOS="64 100 128 200 256 512 600 900 1024 2000 2048 4000"
+TAMANHOS="64 100 128 200" # 256 512 600 900 1024" # 2000 2048 4000"
 
 for m in ${METRICA}
 do
@@ -32,6 +33,7 @@ do
     awk -F"," '(/DP MFLOP/ && !/AVX/){print $2}' Dados/$i >> Resultados/FLOPS_DP.csv
     awk -F"," '/L3 bandwidth/ {print $2}' Dados/$i >> Resultados/L3.csv
     awk -F"," '/L2 miss ratio/ {print $2}' Dados/$i >> Resultados/L2CACHE.csv
+    awk -F"," 'BEGIN {IGNORECASE=1} /Energy \[J\]/ {print $2}' Dados/$i >> Resultados/ENERGY.csv
 done
 
 #Gera .dat dos tempos
@@ -40,13 +42,16 @@ paste -d ',' Resultados/Tamanhos.csv Resultados/Tempos.csv > Resultados/Tempos.d
 #Formata tabela de tamanhos
 sort -g Resultados/Tamanhos.csv | uniq > Resultados/Tempos.csv
 #Gera .dat FLOPS_DP
-paste - - < Resultados/FLOPS_DP.csv | awk '{print $1","$2}' | paste -d ',' Resultados/Tempos.csv - > Resultados/FLOPS_DP.dat
+paste - - - - < Resultados/FLOPS_DP.csv | awk '{print $1","$2","$3","$4}' | paste -d ',' Resultados/Tempos.csv - > Resultados/FLOPS_DP.dat
 
 #Gera .dat L2 CACHE
-paste - - < Resultados/L2CACHE.csv | awk '{print $1","$2}' | paste -d ',' Resultados/Tempos.csv - > Resultados/L2CACHE.dat
+paste - - - - < Resultados/L2CACHE.csv | awk '{print $1","$2","$3","$4}' | paste -d ',' Resultados/Tempos.csv - > Resultados/L2CACHE.dat
 
 #Gera .dat L3
-paste - - < Resultados/L3.csv | awk '{print $1","$2}' | paste -d ',' Resultados/Tempos.csv - > Resultados/L3.dat
+paste - - - - < Resultados/L3.csv | awk '{print $1","$2","$3","$4}' | paste -d ',' Resultados/Tempos.csv - > Resultados/L3.dat
+
+#Gera .dat Energy [J] [J]
+paste - - - - < Resultados/ENERGY.csv | awk '{print $1","$2","$3","$4}' | paste -d ',' Resultados/Tempos.csv - > Resultados/ENERGY.dat
 
 #Roda o script de plotar gráfico
 gnuplot plot.gp

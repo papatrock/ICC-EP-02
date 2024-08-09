@@ -3,6 +3,7 @@
 #include <string.h>
 #include <getopt.h>    /* getopt */
 #include <time.h>
+#include "utils.h"
 
 #include <likwid.h>
 #include "matriz.h"
@@ -18,14 +19,6 @@ static void usage(char *progname)
   exit(1);
 }
 
-typedef double rtime_t;
-
-rtime_t timestamp (void)
-{
-  struct timespec tp;
-  clock_gettime(CLOCK_MONOTONIC_RAW, &tp);
-  return ( (rtime_t) tp.tv_sec*1.0e3 + (rtime_t) tp.tv_nsec*1.0e-6 );
-}
 
 
 /**
@@ -37,6 +30,7 @@ rtime_t timestamp (void)
 
 int main (int argc, char *argv[]) 
 {
+  
   int n=DEF_SIZE;
   
   MatRow mRow_1, mRow_2, resMat;
@@ -80,27 +74,26 @@ int main (int argc, char *argv[])
     prnMat (resMat, n, n);
     printf ("=================================\n\n");
 #endif /* _DEBUG_ */
-
   double time;
   LIKWID_MARKER_INIT;
+  
 
-
-  LIKWID_MARKER_START("MulMatVet_");
+  LIKWID_MARKER_START("MXV_");
   time = timestamp();
   multMatVet (mRow_1, vet, n, n, res);
   time = timestamp() - time;
-  LIKWID_MARKER_STOP("MulMatVet_");
+  LIKWID_MARKER_STOP("MXV_");
   printf("%f,",time);
 
-  LIKWID_MARKER_START("MulMatMat_");
+
   time = timestamp();  
+  LIKWID_MARKER_START("MXM_");
   multMatMat (mRow_1, mRow_2, n, resMat);
+  LIKWID_MARKER_STOP("MXM_");
   time = timestamp() - time;
-  LIKWID_MARKER_STOP("MulMatMat_");
-  printf("%f\n",time);
+  printf("%f,",time);
 
     
-  LIKWID_MARKER_CLOSE;
 
 #ifdef _DEBUG_
     printf("RESULTADO 1 \n");
@@ -108,11 +101,28 @@ int main (int argc, char *argv[])
     prnMat (resMat, n, n);
 #endif 
 
+/*=============Algoritimos otimizados=========================*/
   res = geraVetor (n, 1);
   resMat = geraMatRow(n, n, 1);
 
+  time = timestamp();
+  LIKWID_MARKER_START("MXV-OTIMIZADO_");
   multMatVetOtimi (mRow_1, vet, n, n, res,UF);
+  LIKWID_MARKER_STOP("MXV-OTIMIZADO_");
+  time = timestamp() - time;
+  printf("%f,",time);
+
+
+  time = timestamp(); 
+  LIKWID_MARKER_START("MXM_Otimizado");
   multMatMatOtimi (mRow_1, mRow_2, n, resMat,UF,BK);
+  LIKWID_MARKER_STOP("MXM_Otimizado");
+  time = timestamp() - time;
+  printf("%f\n",time);
+
+
+
+
 
   #ifdef _DEBUG_
     printf("RESULTADO 2 \n");	
@@ -126,6 +136,7 @@ int main (int argc, char *argv[])
   liberaVetor ((void*) vet);
   liberaVetor ((void*) res);
 
+  LIKWID_MARKER_CLOSE;
   return 0;
 }
 
