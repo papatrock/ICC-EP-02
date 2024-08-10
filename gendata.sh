@@ -12,7 +12,7 @@ echo "performance" > /sys/devices/system/cpu/cpufreq/policy3/scaling_governor
 make purge
 make
 
-TAMANHOS="64 100 128" #  200 256 512 600 900 1024 2000" # 2048 4000 5000 6000 10000"
+TAMANHOS="64 100 128  200 256 512 600 900 1024 2000 2048 4000 5000 6000 10000"
 
 for m in ${METRICA}
 do
