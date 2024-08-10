@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PROG="matmult"
-METRICA="FLOPS_AVX L2CACHE L3 ENERGY "
+METRICA="FLOPS_DP L2CACHE L3 ENERGY "
 CPU=3
 DATA_DIR="Dados/"
 TEMPOS="Resultados/Tempos.csv"
@@ -12,7 +12,7 @@ echo "performance" > /sys/devices/system/cpu/cpufreq/policy3/scaling_governor
 make purge
 make
 
-TAMANHOS="64 100 128 200" # 256 512 600 900 1024" # 2000 2048 4000"
+TAMANHOS="64 100 128" #  200 256 512 600 900 1024 2000" # 2048 4000 5000 6000 10000"
 
 for m in ${METRICA}
 do
@@ -56,4 +56,5 @@ paste - - - - < Resultados/ENERGY.csv | awk '{print $1","$2","$3","$4}' | paste 
 #Roda o script de plotar gráfico
 gnuplot plot.gp
 
+echo "Graficos salvos em ./Gráficos"
 echo "powersave" > /sys/devices/system/cpu/cpufreq/policy3/scaling_governor
